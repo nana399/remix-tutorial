@@ -1,30 +1,18 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { Links, Meta, Scripts } from "@remix-run/react";
 import "./tailwind.css";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export default function App() {
   return (
-    <html lang="en">
+    <html lang="ja">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body>
-        {children}
-        <ScrollRestoration />
+        <main className="p-6"></main>
         <Scripts />
       </body>
     </html>
   );
-}
-
-export default function App() {
-  return <Outlet />;
 }
