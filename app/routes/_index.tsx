@@ -28,7 +28,7 @@ export default function Index() {
   const { posts } = useLoaderData<typeof loader>();
   return (
     <div>
-      <h1 className="font-bold text-3xl">投稿一覧strawberrys</h1>
+      <h1 className="font-bold text-3xl">投稿一覧</h1>
       <div>
         {posts.map((post) => (
           <li key={post.id}>
