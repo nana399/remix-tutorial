@@ -22,7 +22,7 @@ jobs:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_PR_LABELS: '["WIP"]'
-          ENABLE_CUSTOM_LABELS: "false"
+          PR_DESCRIPTION.CUSTOM_LABELS: "[]"
           PUBLISH_LABELS: "false"
           PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
           PR_DESCRIPTION.ENABLE_PR_TYPE: "false" 
