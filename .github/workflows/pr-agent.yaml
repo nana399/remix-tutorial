@@ -22,7 +22,8 @@ jobs:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_PR_LABELS: "['WIP']" 
-          ENABLE_CUSTOM_LABELS: 'false'
+          ENABLE_CUSTOM_LABELS: "false"
+          PUBLISH_LABELS: "false"
           PR_DESCRIPTION.EXTRA_INSTRUCTIONS:      '日本語で記述してください。'
           PR_REVIEWER.EXTRA_INSTRUCTIONS:         '日本語で記述してください。'
           PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: '日本語で回答してください。'
