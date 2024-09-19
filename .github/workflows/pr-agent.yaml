@@ -31,4 +31,5 @@ jobs:
           PR_REVIEWER.PERSISTENT_COMMENT: "true"
           PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
           PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
+          PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
           
