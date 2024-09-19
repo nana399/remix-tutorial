@@ -6,11 +6,11 @@ type Post = {
   id: string;
   title: string;
   body: string;
-  userId: string; // Typo修正: useId → userId
+  userId: string; 
 };
 export const meta: MetaFunction = () => {
   return [
-    { title: "testブログ" },
+    { title: "testBlog" },
     { name: "description", content: "testtesttest！" },
   ];
 };
