@@ -2,7 +2,7 @@ name: pr-agent
 
 on:
   pull_request:
-    types: [opened, reopened,review_requested]
+    types: [opened, reopened, review_requested]
   issue_comment:
     types: [created, edited]
 
