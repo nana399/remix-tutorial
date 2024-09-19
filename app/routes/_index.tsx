@@ -35,7 +35,7 @@ export default function Index() {
 
   return (
     <div>
-      <h1 className="font-bold text-3xl">投稿一覧</h1>
+      <h1 className="font-bold text-3xl">strawberrys</h1>
       <ul className="list-disc pl-5">
         {" "}
         {posts.map((post) => (
