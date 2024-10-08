@@ -1,8 +1,6 @@
 name: pr-agent
 
 on:
-  pull_request:
-    types: [opened, reopened, review_requested]
   issue_comment:
     types: [created, edited]
 
@@ -13,8 +11,8 @@ permissions:
 jobs:
   pr_agent:
     runs-on: ubuntu-latest
-    name: Run PR Agent
-    if: ${{ github.event.sender.type != 'Bot' }}
+    name: Run PR Agent on /review comment
+    if: github.event.comment.body == '/review'
     steps:
       - id: pr-agent
         uses: Codium-ai/pr-agent@main
