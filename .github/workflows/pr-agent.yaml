@@ -1,35 +1,28 @@
-name: pr-agent
+name: Code Review
+
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   pull_request:
-    types: [opened, reopened, review_requested]
-  issue_comment:
-    types: [created, edited]
-
-permissions:
-  pull-requests: write
-  issues: write
+    types: [opened, reopened, synchronize]
 
 jobs:
-  pr_agent:
+  test:
+    # if: ${{ contains(github.event.*.labels.*.name, 'gpt review') }} # Optional; to run only when a label is attached
     runs-on: ubuntu-latest
-    name: Run PR Agent
-    if: ${{ github.event.sender.type != 'Bot' }}
     steps:
-      - id: pr-agent
-        uses: Codium-ai/pr-agent@main
+      - uses: anc95/ChatGPT-CodeReview@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PR_LABELS: '["ignore-pr-review"]' 
-          PR_DESCRIPTION.CUSTOM_LABELS: "[]"
-          PUBLISH_LABELS: "false"
-          PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
-          PR_DESCRIPTION.ENABLE_PR_TYPE: "false" 
-          PR_REVIEWER.PERSISTENT_COMMENT: "true"
-          PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
-          PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
-          PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS:      '日本語で記述してください。'
-          PR_REVIEWER.EXTRA_INSTRUCTIONS:         '日本語で記述してください。'
-          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: '日本語で回答してください。'
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Optional
+          LANGUAGE: Japanese ← 　！！！言語設定！！！
+          OPENAI_API_ENDPOINT: https://api.openai.com/v1
+          MODEL: gpt-3.5-turbo # https://platform.openai.com/docs/models
+          PROMPT: # example: Please check if there are any confusions or irregularities in the following code diff:
+          top_p: 1 # https://platform.openai.com/docs/api-reference/chat/create#chat/create-top_p
+          temperature: 1 # https://platform.openai.com/docs/api-reference/chat/create#chat/create-temperature
+          max_tokens: 10000
+          MAX_PATCH_LENGTH: 10000 # if the patch/diff length is large than MAX_PATCH_LENGTH, will be ignored and won't review. By default, with no MAX_PATCH_LENGTH set, there is also no limit for the patch/diff length.
