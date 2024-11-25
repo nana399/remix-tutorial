@@ -19,7 +19,7 @@ jobs:
       - id: pr-agent
         uses: Codium-ai/pr-agent@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_PR_LABELS: '["WIP", "ignore-pr-review"]' 
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
