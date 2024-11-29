@@ -12,17 +12,13 @@ jobs:
   pr_agent:
     runs-on: ubuntu-latest
     name: Run PR Agent
-    if: |
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/run-pr-agent') &&
-      github.event.sender.type != 'Bot'
+    if: ${{ github.event.sender.type != 'Bot' }}
     steps:
       - id: pr-agent
         uses: Codium-ai/pr-agent@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PR_LABELS: '["ignore-pr-review"]'
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
           PUBLISH_LABELS: "false"
           PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
