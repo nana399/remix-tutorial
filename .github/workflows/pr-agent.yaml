@@ -20,7 +20,7 @@ jobs:
       - id: pr-describe
         uses: Codium-ai/pr-agent@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_AGENT_COMMAND: describe
           IGNORE_PR_LABELS: '["ignore-pr-review"]'
@@ -40,7 +40,7 @@ jobs:
       - id: pr-review
         uses: Codium-ai/pr-agent@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_AGENT_COMMAND: review
           IGNORE_PR_LABELS: '["ignore-pr-review"]'
@@ -60,7 +60,7 @@ jobs:
       - id: pr-improve
         uses: Codium-ai/pr-agent@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_AGENT_COMMAND: improve
           IGNORE_PR_LABELS: '["ignore-pr-review"]'
