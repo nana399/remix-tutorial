@@ -1,6 +1,8 @@
 name: pr-agent
 
 on:
+  pull_request:
+    types: [labeled]
   issue_comment:
     types: [created, edited]
 
@@ -13,9 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Run PR Agent
     if: |
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/run-pr-agent') &&
-      github.event.sender.type != 'Bot'
+      github.event.sender.type != 'Bot' &&
+      (contains(github.event.pull_request.labels.*.name, 'run-pr-agent'))
     steps:
       - id: pr-agent
         uses: Codium-ai/pr-agent@main
