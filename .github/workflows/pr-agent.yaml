@@ -2,35 +2,45 @@ name: pr-agent
 
 on:
   issue_comment:
-    types: [created, edited]
+    types: [created]
 
 permissions:
   pull-requests: write
   issues: write
 
+env:
+  OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  IGNORE_PR_LABELS: '["ignore-pr-review"]'
+  PUBLISH_LABELS: "false"
+  PR_REVIEWER.PERSISTENT_COMMENT: "true"
+  PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
+  PR_DESCRIPTION.ENABLE_PR_TYPE: "false"
+  PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
+  PR_REVIEWER.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
+  PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "日本語で回答してください。"
+
 jobs:
-  pr_agent:
+  pr_commands:
     runs-on: ubuntu-latest
-    name: Run PR Agent
     if: |
       github.event.issue.pull_request &&
       contains(github.event.comment.body, '/run-pr-agent') &&
       github.event.sender.type != 'Bot'
     steps:
-      - id: pr-agent
+      - uses: actions/checkout@v4
+      
+      - name: Run describe command
         uses: Codium-ai/pr-agent@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PR_LABELS: '["ignore-pr-review"]'
-          PR_DESCRIPTION.CUSTOM_LABELS: "[]"
-          PUBLISH_LABELS: "false"
-          PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
-          PR_DESCRIPTION.ENABLE_PR_TYPE: "false"
-          PR_REVIEWER.PERSISTENT_COMMENT: "true"
-          PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
-          PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
-          PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
-          PR_REVIEWER.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
-          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "日本語で回答してください。"
+          PR_AGENT_COMMENT: "/describe"
+          
+      - name: Run review command
+        uses: Codium-ai/pr-agent@main
+        env:
+          PR_AGENT_COMMENT: "/review"
+          
+      - name: Run improve command
+        uses: Codium-ai/pr-agent@main
+        env:
+          PR_AGENT_COMMENT: "/improve"
