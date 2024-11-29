@@ -14,8 +14,8 @@ jobs:
     name: Run PR Agent
     if: |
       github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/run-pr-agent') &&
-      github.event.sender.type != 'Bot'
+      github.event.sender.type != 'Bot' &&
+      contains(github.event.comment.body, '/run')
     steps:
       - id: pr-agent
         uses: Codium-ai/pr-agent@main
