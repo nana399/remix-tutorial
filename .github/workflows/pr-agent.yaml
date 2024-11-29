@@ -1,6 +1,8 @@
 name: pr-agent
 
 on:
+  pull_request:
+    types: [opened, reopened, review_requested]
   issue_comment:
     types: [created, edited]
 
@@ -12,25 +14,22 @@ jobs:
   pr_agent:
     runs-on: ubuntu-latest
     name: Run PR Agent
-    if: |
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/run-pr-agent') &&
-      github.event.sender.type != 'Bot'
+    if: ${{ github.event.sender.type != 'Bot' }}
     steps:
       - id: pr-agent
         uses: Codium-ai/pr-agent@main
         env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PR_LABELS: '["ignore-pr-review"]'
+          IGNORE_PR_LABELS: '["WIP", "ignore-pr-review"]' 
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
           PUBLISH_LABELS: "false"
           PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
-          PR_DESCRIPTION.ENABLE_PR_TYPE: "false"
+          PR_DESCRIPTION.ENABLE_PR_TYPE: "false" 
           PR_REVIEWER.PERSISTENT_COMMENT: "true"
           PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
           PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
           PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
-          PR_REVIEWER.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
-          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "日本語で回答してください。"
+          PR_DESCRIPTION.EXTRA_INSTRUCTIONS:      '日本語で記述してください。'
+          PR_REVIEWER.EXTRA_INSTRUCTIONS:         '日本語で記述してください。'
+          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: '日本語で回答してください。'
