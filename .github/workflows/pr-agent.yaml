@@ -1,10 +1,8 @@
 name: pr-agent
 
 on:
-  pull_request:
-      types: [opened, reopened, synchronize]
-  issue_comment:
-    types: [created, edited]
+ pull_request_review_comment:
+   types: [created]
 
 permissions:
   pull-requests: write
@@ -24,6 +22,7 @@ jobs:
           command: run-pr-agent
           reaction: "true"
           reaction-type: "eyes"
+      
       - name: Run PR Agent
         if: steps.command.outputs.command-name == 'run-pr-agent
         uses: Codium-ai/pr-agent@main
