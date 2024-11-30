@@ -21,7 +21,7 @@ jobs:
           reaction: "true"
           reaction-type: "eyes"
       - name: Run PR Agent
-        if: steps.command.outputs.command-name == 'run' && steps.command.outputs.command-arguments == 'pr-agent'
+        if: steps.command.outputs.command-arguments == 'pr-agent'
         uses: Codium-ai/pr-agent@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
