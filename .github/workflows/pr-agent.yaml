@@ -21,9 +21,9 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AUTO_DESCRIBE: "false"
-          AUTO_REVIEW: "false"
-          AUTO_IMPROVE: "false"
+          GITHUB_ACTION_AUTO_DESCRIBE: "false"
+          GITHUB_ACTION_AUTO_REVIEW: "false" 
+          GITHUB_ACTION_AUTO_IMPROVE: "false"
           IGNORE_PR_LABELS: '["ignore-pr-review"]' 
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
           PUBLISH_LABELS: "false"
