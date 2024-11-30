@@ -1,7 +1,10 @@
 name: pr-agent
 
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [opened]
+  issue_comment:
+    types: [created, edited]
 
 permissions:
   pull-requests: write
@@ -18,7 +21,9 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PR_LABELS: '["ignore-pr-review"]' 
+          github_action.auto_describe: false
+          github_action.auto_review:   false
+          github_action.auto_improve:  false
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
           PUBLISH_LABELS: "false"
           PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
