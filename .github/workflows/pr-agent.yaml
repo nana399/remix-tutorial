@@ -1,8 +1,10 @@
 name: pr-agent
 
 on:
-  pull_request_review_comment:
-    types: [created]
+  pull_request:
+    types: [opened]
+  issue_comment:
+    types: [created, edited]
 
 permissions:
  pull-requests: write
@@ -12,16 +14,16 @@ jobs:
  pr_agent:
    runs-on: ubuntu-latest
    name: Run PR Agent
-   if: |
-     github.event.sender.type != 'Bot' &&
-      github.event.issue.pull_request &&
-      (contains(github.event.comment.body, '/review') || contains(github.event.comment.body, '/describe') || contains(github.event.comment.body, '/improve'))
+    if: ${{ github.event.sender.type != 'Bot' }}
    steps:
      - id: pr-agent
        uses: Codium-ai/pr-agent@main
        env:
          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         github_action.auto_describe: false
+         github_action.auto_review:   false
+         github_action.auto_improve:  false
          IGNORE_PR_LABELS: '["ignore-pr-review"]'
          PR_DESCRIPTION.CUSTOM_LABELS: "[]"
          PUBLISH_LABELS: "false"
