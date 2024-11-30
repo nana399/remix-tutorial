@@ -22,9 +22,9 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTION.AUTO_DESCRIBE: false
-          GITHUB_ACTION.AUTO_REVIEW:   false
-          GITHUB_ACTION.AUTO_IMPROVE:  false
+          GITHUB_ACTION.AUTO_DESCRIBE: "false"
+          GITHUB_ACTION.AUTO_REVIEW:   "false"
+          GITHUB_ACTION.AUTO_IMPROVE:  "false"
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
           PUBLISH_LABELS: "false"
           PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
@@ -36,4 +36,3 @@ jobs:
           PR_DESCRIPTION.EXTRA_INSTRUCTIONS:      '日本語で記述してください。'
           PR_REVIEWER.EXTRA_INSTRUCTIONS:         '日本語で記述してください。'
           PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: '日本語で回答してください。'
-        
