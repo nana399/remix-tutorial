@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   pr_agent:
+    if: github.event.issue.pull_request
     runs-on: ubuntu-latest
     name: Run PR Agent
     steps:
