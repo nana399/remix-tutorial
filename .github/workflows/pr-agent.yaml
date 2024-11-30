@@ -12,12 +12,17 @@ jobs:
   pr_agent:
     runs-on: ubuntu-latest
     name: Run PR Agent
-    if: |
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/run-pr-agent') &&
-      github.event.sender.type != 'Bot'
     steps:
-      - id: pr-agent
+      - name: Check for Command
+        id: command
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: run
+          reaction: "true"
+          reaction-type: "eyes"
+      - name: Run PR Agent
+        if: steps.command.outputs.command-arguments == 'pr-agent'
         uses: Codium-ai/pr-agent@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
