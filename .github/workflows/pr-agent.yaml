@@ -36,3 +36,17 @@ jobs:
           PR_DESCRIPTION.EXTRA_INSTRUCTIONS:      '日本語で記述してください。'
           PR_REVIEWER.EXTRA_INSTRUCTIONS:         '日本語で記述してください。'
           PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: '日本語で回答してください。'
+
+handle_run_command:
+  runs-on: ubuntu-latest
+  name: Handle `/run` Command
+  if: ${{ github.event.comment.body == '/run' }}
+  steps:
+    - name: Execute `/run` Command
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "Executing commands for '/run':"
+        echo "/describe --pr_description.final_update_message=false"
+        echo "/review --pr_reviewer.num_code_suggestions=0"
+        echo "/improve"
