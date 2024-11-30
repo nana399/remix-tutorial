@@ -10,8 +10,7 @@ on:
 permissions:
   pull-requests: write
   issues: write
-  contents: read
-
+  
 jobs:
   pr_agent:
     runs-on: ubuntu-latest
