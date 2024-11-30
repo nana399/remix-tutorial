@@ -1,6 +1,8 @@
 name: pr-agent
 
 on:
+  pull_request:
+      types: [opened, reopened, synchronize]
   issue_comment:
     types: [created, edited]
 
@@ -30,7 +32,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IGNORE_PR_LABELS: '["ignore-pr-review"]'
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
-          PUBLISH_LABELS: "false"
           PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
           PR_DESCRIPTION.ENABLE_PR_TYPE: "false"
           PR_REVIEWER.PERSISTENT_COMMENT: "true"
