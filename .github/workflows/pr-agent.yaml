@@ -23,20 +23,29 @@ jobs:
           reaction: "true"
           reaction-type: "eyes"
       
-      - name: Run PR Agent
-        if: steps.command.outputs.command-name == 'run-pr-agent
-        uses: Codium-ai/pr-agent@main
-        env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IGNORE_PR_LABELS: '["ignore-pr-review"]'
-          PR_DESCRIPTION.CUSTOM_LABELS: "[]"
-          PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
-          PR_DESCRIPTION.ENABLE_PR_TYPE: "false"
-          PR_REVIEWER.PERSISTENT_COMMENT: "true"
-          PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
-          PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
-          PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
-          PR_REVIEWER.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
-          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "日本語で回答してください。"
+     - name: Run PR Agent Description
+       if: steps.command.outputs.command-name == 'run-pr-agent'
+       uses: Codium-ai/pr-agent@main
+       with:
+         command: describe
+       env:
+         OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: Run PR Agent Review
+       if: steps.command.outputs.command-name == 'run-pr-agent'
+       uses: Codium-ai/pr-agent@main
+       with:
+         command: review
+       env:
+         OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: Run PR Agent Improve
+       if: steps.command.outputs.command-name == 'run-pr-agent'
+       uses: Codium-ai/pr-agent@main
+       with:
+         command: improve
+       env:
+         OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
