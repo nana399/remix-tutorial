@@ -1,11 +1,7 @@
-
 name: pr-agent
-
 on:
-  pull_request:
-    types: [opened]
   issue_comment:
-    types: [created, edited]
+    types: [created]
 
 permissions:
   pull-requests: write
@@ -13,26 +9,27 @@ permissions:
   
 jobs:
   pr_agent:
+    if: |
+      github.event.issue.pull_request &&
+      github.event.sender.type != 'Bot' &&
+      (contains(github.event.comment.body, '/run') || contains(github.event.comment.body, '/describe') || contains(github.event.comment.body, '/review') || contains(github.event.comment.body, '/improve'))
     runs-on: ubuntu-latest
-    name: Run PR Agent
-    if: ${{ github.event.sender.type != 'Bot' }}
     steps:
-      - id: pr-agent
+      - name: Run Multiple Commands
+        if: contains(github.event.comment.body, '/run')
+        run: |
+          gh pr comment ${{ github.event.issue.number }} -b "/improve"
+          gh pr comment ${{ github.event.issue.number }} -b "/describe"
+          gh pr comment ${{ github.event.issue.number }} -b "/review"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run PR Agent
         uses: Codium-ai/pr-agent@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTION.AUTO_DESCRIBE: true
-          GITHUB_ACTION.AUTO_REVIEW:   false
-          GITHUB_ACTION.AUTO_IMPROVE:  false
+          GITHUB_ACTION.AUTO_DESCRIBE: false
+          GITHUB_ACTION.AUTO_REVIEW: false
+          GITHUB_ACTION.AUTO_IMPROVE: false
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
-          PUBLISH_LABELS: "false"
-          PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
-          PR_DESCRIPTION.ENABLE_PR_TYPE: "false" 
-          PR_REVIEWER.PERSISTENT_COMMENT: "true"
-          PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
-          PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
-          PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS:      '日本語で記述してください。'
-          PR_REVIEWER.EXTRA_INSTRUCTIONS:         '日本語で記述してください。'
-          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: '日本語で回答してください。'
