@@ -5,47 +5,46 @@ on:
    types: [created]
 
 permissions:
-  pull-requests: write
-  issues: write
+ pull-requests: write
+ issues: write
 
 jobs:
-  pr_agent:
-    if: github.event.issue.pull_request
-    runs-on: ubuntu-latest
-    name: Run PR Agent
-    steps:
-      - name: Check for Command
-        id: command
-        uses: xt0rted/slash-command-action@v1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: run-pr-agent
-          reaction: "true"
-          reaction-type: "eyes"
-      
-     - name: Run PR Agent Description
-       if: steps.command.outputs.command-name == 'run-pr-agent'
-       uses: Codium-ai/pr-agent@main
+ pr_agent:
+   runs-on: ubuntu-latest
+   name: Run PR Agent
+   steps:
+     - name: Check for Command
+       id: command
+       uses: xt0rted/slash-command-action@v1
        with:
-         command: describe
-       env:
-         OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         repo-token: ${{ secrets.GITHUB_TOKEN }}
+         command: run-pr-agent
+         reaction: "true"
+         reaction-type: "eyes"
 
-     - name: Run PR Agent Review
+     - name: Run Multiple PR Agent Commands
        if: steps.command.outputs.command-name == 'run-pr-agent'
-       uses: Codium-ai/pr-agent@main
-       with:
-         command: review
+       run: |
+         echo "/describe" > comment.txt
+         gh pr comment ${{ github.event.pull_request.number }} --body-file comment.txt
+         sleep 5
+         echo "/review" > comment.txt
+         gh pr comment ${{ github.event.pull_request.number }} --body-file comment.txt
+         sleep 5
+         echo "/improve" > comment.txt
+         gh pr comment ${{ github.event.pull_request.number }} --body-file comment.txt
        env:
-         OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-     - name: Run PR Agent Improve
-       if: steps.command.outputs.command-name == 'run-pr-agent'
-       uses: Codium-ai/pr-agent@main
-       with:
-         command: improve
-       env:
          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         IGNORE_PR_LABELS: '["ignore-pr-review"]'
+         PR_DESCRIPTION.CUSTOM_LABELS: "[]"
+         PUBLISH_LABELS: "false"
+         PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
+         PR_DESCRIPTION.ENABLE_PR_TYPE: "false"
+         PR_REVIEWER.PERSISTENT_COMMENT: "true"
+         PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
+         PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
+         PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
+         PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
+         PR_REVIEWER.EXTRA_INSTRUCTIONS: "日本語で記述してください。"
+         PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "日本語で回答してください。"
