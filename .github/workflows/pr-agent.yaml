@@ -1,4 +1,3 @@
-
 name: pr-agent
 
 on:
@@ -10,7 +9,7 @@ on:
 permissions:
   pull-requests: write
   issues: write
-  
+
 jobs:
   pr_agent:
     runs-on: ubuntu-latest
@@ -23,30 +22,47 @@ jobs:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTION.AUTO_DESCRIBE: true
-          GITHUB_ACTION.AUTO_REVIEW:   false
-          GITHUB_ACTION.AUTO_IMPROVE:  false
+          GITHUB_ACTION.AUTO_REVIEW: false
+          GITHUB_ACTION.AUTO_IMPROVE: false
           PR_DESCRIPTION.CUSTOM_LABELS: "[]"
           PUBLISH_LABELS: "false"
           PR_REVIEWER.ENABLE_REVIEW_LABELS_EFFORT: "false"
-          PR_DESCRIPTION.ENABLE_PR_TYPE: "false" 
+          PR_DESCRIPTION.ENABLE_PR_TYPE: "false"
           PR_REVIEWER.PERSISTENT_COMMENT: "true"
           PR_CODE_SUGGESTIONS.PERSISTENT_COMMENT: "true"
           PR_ADD_DOCS.PERSISTENT_COMMENT: "true"
           PR_REVIEWER.INLINE_CODE_COMMENTS: "true"
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS:      '日本語で記述してください。'
-          PR_REVIEWER.EXTRA_INSTRUCTIONS:         '日本語で記述してください。'
+          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: '日本語で記述してください。'
+          PR_REVIEWER.EXTRA_INSTRUCTIONS: '日本語で記述してください。'
           PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: '日本語で回答してください。'
 
-handle_run_command:
-  runs-on: ubuntu-latest
-  name: Handle `/run` Command
-  if: ${{ github.event.comment.body == '/run' }}
-  steps:
-    - name: Execute `/run` Command
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        echo "Executing commands for '/run':"
-        echo "/describe --pr_description.final_update_message=false"
-        echo "/review --pr_reviewer.num_code_suggestions=0"
-        echo "/improve"
+  handle_run_command:
+    runs-on: ubuntu-latest
+    name: Handle `/run` Command
+    needs: pr_agent
+    if: ${{ github.event.comment.body == '/run' }}
+    steps:
+      - name: Execute `/run` Command
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Executing commands for '/run':"
+          echo "/describe --pr_description.final_update_message=false"
+          echo "/review --pr_reviewer.num_code_suggestions=0"
+          echo "/improve"
+          # 必要に応じてAPI呼び出しを追加
+          curl -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"body":"/describe --pr_description.final_update_message=false"}' \
+               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments"
+          curl -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"body":"/review --pr_reviewer.num_code_suggestions=0"}' \
+               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments"
+          curl -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"body":"/improve"}' \
+               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments"
