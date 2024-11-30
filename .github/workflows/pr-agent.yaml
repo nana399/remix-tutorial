@@ -19,11 +19,10 @@ jobs:
         uses: xt0rted/slash-command-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: run
+          command: run-pr-agnet
           reaction: "true"
           reaction-type: "eyes"
       - name: Run PR Agent
-        if: ${{ steps.command.outputs.command-name == 'run' }}
         uses: Codium-ai/pr-agent@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
