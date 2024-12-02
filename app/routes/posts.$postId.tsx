@@ -13,7 +13,7 @@ export default function Post() {
   const { post } = useLoaderData<typeof loader>();
   return (
     <div>
-      <h1 className="font-bold text-3xl">投稿詳細</h1>
+      <h1 className="font-bold text-3xl">投稿詳細bluberrys</h1>
       <h2 className="text-2xl my-2">{post.title}</h2>
       <p>{post.body}</p>
     </div>
