@@ -13,7 +13,7 @@ jobs:
   pr_agent:
     runs-on: ubuntu-latest
     name: Run PR Agent
-    if: ${{ github.event.sender.type != 'Bot' }}
+    if: github.event.sender.type != 'Bot' && github.event.issue.pull_request != null
     steps:
       - id: pr-agent
         uses: Codium-ai/pr-agent@main
